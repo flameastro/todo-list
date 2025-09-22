@@ -1,0 +1,2 @@
+- [ ] Atualizar o README
+- [ ] Separar mais funções no utils.py
