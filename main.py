@@ -1,36 +1,8 @@
 import streamlit as st
-import json
-import os
 
 import utils
 
 utils.page_settings()
-
-
-def read_database():
-    """Lê o banco de dados JSON e retorna uma lista de tarefas"""
-    if not os.path.exists("database/data.json"):
-        return []
-
-    with open("database/data.json", "r") as f:
-        try:
-            data = json.load(f)
-        except json.JSONDecodeError:
-            data = []
-    return data
-
-
-def write_database(data):
-    """Escreve a lista de tarefas no banco"""
-    with open("database/data.json", "w") as f:
-        json.dump(data, f, indent=4)
-
-
-def open_database():
-    data = read_database()
-    for e in data:
-        st.checkbox(e)
-
 
 def main():
     st.title("✅ ToDo List")
@@ -42,17 +14,19 @@ def main():
     if submit:
         if task == "":
             st.warning("Por favor, certifique-se de ter preenchido o campo de tarefa!")
+        elif len(task) <= 0 or len(task) >= 100:
+            st.warning("O nome da tarefa deve ter entre 0 a 100 caracteres, certifique-se que sua tarefa tenha menos que isso.")
         else:
-            old_data = read_database()
+            old_data = utils.read_database()
             if task in old_data:
                 st.toast("Esta tarefa já foi adicionada!", icon="⚠️", duration="long")
             else:
                 old_data.append(task)
-                write_database(old_data)
+                utils.write_database(old_data)
 
                 st.toast(f"Tarefa '{task}' adicionada com sucesso!", icon="✅")
 
-    open_database()
+    utils.open_database()
 
 
 main()
